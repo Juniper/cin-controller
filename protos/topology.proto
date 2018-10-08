@@ -48,16 +48,12 @@ service TopologyService {
 
 
 // List of nodes
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref
 message NodeList {
   // List of nodes
   repeated Node entry = 1;
 }
 
 // Type of element under maintenance.
-// used by topology
-// defined from topology/rpc/input/AddMaintenance/$ref/Maintenance//$ref/MaintenanceElement/$ref/MaintenanceElementIndex/$ref
 enum MaintenanceElementType {
   MAINTENANCEELEMENTTYPE_NODE = 0;
   MAINTENANCEELEMENTTYPE_LINK = 1;
@@ -65,24 +61,18 @@ enum MaintenanceElementType {
 }
 
 // Node Geographical properties, currently Latitude/Longitude coordinates
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/$ref
 message NodeGeoProperties {
   // A GeoJSON Point, allowing crs and bbox
   NodeCoordinates coordinates = 1;
 }
 
 // A list of maintenance
-// used by topology
-// defined from topology/rpc/output/ListMaintenances/$ref
 message MaintenanceList {
   // A list of maintenance
   repeated Maintenance entry = 1;
 }
 
 // ISIS Protocol Level
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/InterfaceProtocols/ISISLinkTEProperties
 enum ISISLevel {
   ISISLEVEL_L1 = 0;
   ISISLEVEL_L2 = 1;
@@ -90,8 +80,6 @@ enum ISISLevel {
 }
 
 // set of properties that can be updated (PUT) on a link
-// used by topology
-// defined from topology/rpc/input/UpdateLink/$ref
 message UpdateLink {
   // link type
   string    linkType  = 1;
@@ -114,8 +102,6 @@ message UpdateLink {
 
 // An entry in the Link history, which consists of the information received from 
 // Topology acquisition
-// used by topology
-// defined from topology/rpc/output/GetLinkHistory/$ref/LinkHistoryEventList/$ref
 message LinkHistoryEvent {
   // Event Timestamp.
   uint64 timestamp = 1;
@@ -125,8 +111,6 @@ message LinkHistoryEvent {
 }
 
 // Represent a single maintenance
-// used by topology
-// defined from topology/rpc/output/AddMaintenance/$ref
 message CreateMaintenance {
   // commnent
   string                      comment                      = 1;
@@ -152,8 +136,6 @@ message CreateMaintenance {
 }
 
 // A GeoJSON Point, allowing crs and bbox
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/$ref/NodeGeoProperties
 message NodeCoordinates {
   repeated int64 coordinates = 1;
 }
@@ -161,8 +143,6 @@ message NodeCoordinates {
 // For link imported from a transport controller, contains transport-specific 
 // information. In this release it contains IP-to-transport links specific 
 // information.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/InterfaceProtocols
 message TransportLinkProperties {
   // For Transport inter-layer link, this contains the IP address of the 
   // interface the access link is connected to.
@@ -173,8 +153,6 @@ message TransportLinkProperties {
 }
 
 // OSPFv3 Link TE properties.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/InterfaceProtocols
 message OSPFv3LinkTEProperties {
   uint64        metric   = 1;
   uint64        TEMetric = 2;
@@ -183,8 +161,6 @@ message OSPFv3LinkTEProperties {
 }
 
 // SR information of a Prefix
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/$ref/NodePrefixList/$ref/NodePrefix
 message NodePrefixSR {
   // Index of the prefix in the global SR tables
   int64 index = 1;
@@ -197,8 +173,6 @@ message NodePrefixSR {
 }
 
 // protocols configuration and information on the node
-// used by topology
-// defined from topology/rpc/input/UpdateNode/$ref/UpdateNode/$ref
 message NodeProtocolUser {
   // PCEP properties that can be user-modified.
   NodePCEPProtocolUser PCEP       = 1;
@@ -212,8 +186,6 @@ message NodeProtocolUser {
 }
 
 // Represent a single facility
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/FacilityList/$ref
 message Facility {
   // commnent
   string                   comment       = 1;
@@ -233,8 +205,6 @@ message Facility {
 }
 
 // Node PCEP Session properties and status.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols
 message NodePCEPProtocol {
   // Ipv4 address of pcc in xx.xx.xx.xx
   // format: ipv4
@@ -250,8 +220,6 @@ message NodePCEPProtocol {
 }
 
 // reference to an interface on a link
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/InterfaceProtocols/TransportLinkProperties/$ref
 message LinkInterfaceRef {
   // interface Ipv4 Address
   Ipv4Reference ipv4Address = 1;
@@ -262,8 +230,6 @@ message LinkInterfaceRef {
 }
 
 // Netconf provisioning protocol status
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols
 message NodeNETCONFProtocol {
   // remote peer NETCONF session parameters
   NodeNETCONFProtocolSessionParameters sessionParameters  = 1;
@@ -278,8 +244,6 @@ message NodeNETCONFProtocol {
 }
 
 // Interface where correlation failed
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref
 message UndefinedInterface {
   Node   node           = 1;
   // This is a REQUIRED attribute
@@ -289,8 +253,6 @@ message UndefinedInterface {
 }
 
 // IP Prefix
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/$ref/NodePrefixList/$ref/NodePrefix/$ref
 message Ipv6Prefix {
   // prefix length
   int64  length  = 1;
@@ -300,8 +262,6 @@ message Ipv6Prefix {
 }
 
 // OSPF Link TE properties.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/InterfaceProtocols
 message OSPFLinkTEProperties {
   uint64        metric   = 1;
   uint64        TEMetric = 2;
@@ -310,8 +270,6 @@ message OSPFLinkTEProperties {
 }
 
 // Carry the index of an element under maintenance.
-// used by topology
-// defined from topology/rpc/input/AddMaintenance/$ref/Maintenance//$ref/MaintenanceElement/$ref
 message MaintenanceElementIndex {
   // The index of the link, node or interface, depending on the type. If both id 
   // and index are specified, index takes precedence
@@ -322,8 +280,6 @@ message MaintenanceElementIndex {
 }
 
 // Input parameters for SearchNode rpc
-// used by topology
-// defined from topology/rpc/input/SearchNode
 message SearchNodeQuery {
   // object name, string without space, comma
   string name = 1;
@@ -331,8 +287,6 @@ message SearchNodeQuery {
 }
 
 // Adjacency SID information.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/InterfaceProtocols/SRLinkProperties/$ref/SIDList/$ref
 message AdjacencySegmentIdentifiers {
   // ISIS-Flags, the OSPF are mapped to the ISIS
   int64 flags  = 1;
@@ -341,16 +295,12 @@ message AdjacencySegmentIdentifiers {
 }
 
 // List of SRLGs.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref
 message SrlgList {
   // List of SRLGs.
   repeated Srlg entry = 1;
 }
 
 // properties set that can used for planned node creation
-// used by topology
-// defined from topology/rpc/input/AddNode/$ref
 message CreateNode {
   // Comment
   string                     comment          = 1 ;
@@ -378,8 +328,6 @@ message CreateNode {
 }
 
 // remote peer pcep session parameters
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols/NodePCEPProtocol
 message NodePCEPProtocolSessionParameters {
   // The SR maximum Stack Depth (MSD) reported by the PCC
   uint64 maximumStackDepth = 1;
@@ -390,14 +338,10 @@ message NodePCEPProtocolSessionParameters {
 }
 
 // message for all RPC that do not take any parameter
-// used by topology-lsp, topology-transport, topology
-// defined from _undef
 message NoParameters {
 }
 
 // represents a single link
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref
 message Link {
   // link type
   string               linkType             = 1 ;
@@ -425,8 +369,6 @@ message Link {
 }
 
 // Input parameters for SearchLink rpc
-// used by topology
-// defined from topology/rpc/input/SearchLink
 message SearchLinkQuery {
   // object name, string without space, comma
   string name    = 1;
@@ -434,8 +376,6 @@ message SearchLinkQuery {
 }
 
 // interface, can be part of a link
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref
 message Interface {
   // interface Ipv4 Address
   Ipv4Reference       ipv4Address      = 1 ;
@@ -472,8 +412,6 @@ message Interface {
 }
 
 // user-defined design properties
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/$ref
 message NodeDesignParameters {
   // node delay in milliseconds
   uint64                delay                   = 1;
@@ -486,16 +424,12 @@ message NodeDesignParameters {
 }
 
 // a numbered reference, not correlated to any object type
-// used by topology-lsp, topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref
 message Ipv4Reference {
   // This is a REQUIRED attribute
   string address = 1;
 }
 
 // protocols configuration and information
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface
 message InterfaceProtocols {
   // ISIS Link TE properties.
   ISISLinkTEProperties    ISIS      = 1;
@@ -514,8 +448,6 @@ message InterfaceProtocols {
 }
 
 // Link Protection Type desired for this link
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref
 enum LinkProtectionType {
   LINKPROTECTIONTYPE_1_PLUS_1 = 0;
   LINKPROTECTIONTYPE_UNPROTECTED = 1;
@@ -526,8 +458,6 @@ enum LinkProtectionType {
 }
 
 // forces NorthStar support of specific extensions
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols/NodePCEPProtocol
 message NodePCEPProtocolExtensions {
   // Support for Primary/Secondary LSP using 
   // draft-ananthakrishnan-pce-stateful-path-protection-00.
@@ -535,8 +465,6 @@ message NodePCEPProtocolExtensions {
 }
 
 // ISIS Link TE properties.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/InterfaceProtocols
 message ISISLinkTEProperties {
   uint64        metricL1 = 1;
   uint64        metricL2 = 2;
@@ -549,16 +477,12 @@ message ISISLinkTEProperties {
 }
 
 // List of facility
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref
 message FacilityList {
   // List of facility
   repeated Facility entry = 1;
 }
 
 // Represent the node Segment Routing (SR) parameters
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols
 message NodeSRProtocol {
   // If true the node can be used to route SR Tunnels. This flag is set to true 
   // if the node has SRGB and a node index (Prefix with routerId role and SR 
@@ -573,8 +497,6 @@ message NodeSRProtocol {
 }
 
 // One range
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols/NodeSRProtocol/
 message SRGBRange {
   uint64 start = 1;
   uint64 range = 2;
@@ -583,16 +505,12 @@ message SRGBRange {
 // Input parameters for GetNode, DeleteNode, DeleteMaintenance, GetMaintenance, 
 // DeleteFacility, GetFacility, GetLink, DeleteLink, GetLinkDevice, GetLinkBgpLs, 
 // GetLinkUser, GetLsp, DeleteLsp rpcs
-// used by topology
-// defined from topology/rpc/input/GetNode
 message GetNodeQuery {
   // TE App object index
   uint64 objectIndex = 1;
 }
 
 // Element under maintenance, a type and an id or index.
-// used by topology
-// defined from topology/rpc/input/AddMaintenance/$ref/Maintenance//$ref
 message MaintenanceElement {
   oneof oneOf_1 {
     MaintenanceElementIndex maintenanceElementIndex = 1;
@@ -601,8 +519,6 @@ message MaintenanceElement {
 }
 
 // Operational status
-// used by topology-lsp, topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols/NodePCEPProtocol/$ref
 enum OperStatus {
   OPERSTATUS_DOWN = 0;
   OPERSTATUS_UNKNOWN = 1;
@@ -611,8 +527,6 @@ enum OperStatus {
 }
 
 // Prefix information attached to a node.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/$ref/NodePrefixList/$ref
 message NodePrefix {
   // SR information of a Prefix
   NodePrefixSR SR         = 1;
@@ -626,8 +540,6 @@ message NodePrefix {
 }
 
 // Represent a single maintenance
-// used by topology
-// defined from topology/rpc/input/AddMaintenance/$ref
 message Maintenance {
   MaintenanceStatus           status                       = 1 ;
   // commnent
@@ -654,16 +566,12 @@ message Maintenance {
 }
 
 // PCEP properties that can be user-modified.
-// used by topology
-// defined from topology/rpc/input/UpdateNode/$ref/UpdateNode/$ref/NodeProtocolUser
 message NodePCEPProtocolUser {
   // forces NorthStar support of specific extensions
   NodePCEPProtocolExtensions extensions = 1;
 }
 
 // Represent the risk source of this facility.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/FacilityList/$ref/Facility//$ref
 message FacilityElement {
   // The id of the link, node or interface, depending on the type
   // This is a REQUIRED attribute
@@ -675,8 +583,6 @@ message FacilityElement {
 
 // schema for bulk node delete, the number of entries that can be modified at a 
 // time is limited
-// used by topology
-// defined from topology/rpc/input/BulkDeleteNode/$ref
 message NodeListDelete {
   // schema for bulk node delete, the number of entries that can be modified at a 
   // time is limited
@@ -684,8 +590,6 @@ message NodeListDelete {
 }
 
 // represents a single node
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref
 message Node {
   // Comment
   string                     comment             = 1 ;
@@ -732,8 +636,6 @@ message Node {
 }
 
 // ISIS Node properties
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols
 message NodeISISProtocol {
   // format: ipv6
   string routerId    = 1;
@@ -746,32 +648,24 @@ message NodeISISProtocol {
 }
 
 // List of prefixes attached to a node.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/$ref
 message NodePrefixList {
   // List of prefixes attached to a node.
   repeated NodePrefix entry = 1;
 }
 
 // List of links
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref
 message LinkList {
   // List of links
   repeated Link entry = 1;
 }
 
 // siteAS Number
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/$ref
 message ASNumber {
   // This is a REQUIRED attribute
   uint64 asNumber = 1;
 }
 
 // a numbered reference, not correlated to any object type, with an optional tag
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node//$ref
 message Ipv4TaggedAddress {
   // format: ipv4
   // This is a REQUIRED attribute
@@ -780,8 +674,6 @@ message Ipv4TaggedAddress {
 }
 
 // List of link historical events
-// used by topology
-// defined from topology/rpc/output/GetLinkHistory/$ref
 message LinkHistoryEventList {
   // List of link historical events
   repeated LinkHistoryEvent entry = 1;
@@ -789,8 +681,6 @@ message LinkHistoryEventList {
 
 // Topology view of L3 and L1 (if transport ingest has been configured). Contains 
 // node, links and facilities.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref
 message Topology {
   // all nodes
   repeated Link     links      = 1;
@@ -801,8 +691,6 @@ message Topology {
 }
 
 // Carry the string id of an element under maintenance.
-// used by topology
-// defined from topology/rpc/input/AddMaintenance/$ref/Maintenance//$ref/MaintenanceElement/$ref
 message MaintenanceElementId {
   // The id of the link, node or interface, depending on the type
   // This is a REQUIRED attribute
@@ -812,39 +700,29 @@ message MaintenanceElementId {
 }
 
 // Unreserved bandwidth array
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref
 message UnreservedBw {
   // Unreserved bandwidth array
   repeated Bandwidth entry = 1;
 }
 
 // RSVP Link TE properties.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/InterfaceProtocols
 message RSVPLinkTEProperties {
   Bandwidth bandwidth = 1;
 }
 
 // Generic RPC operation result when no data is returned
-// used by topology-lsp, topology-transport, topology
-// defined from _undef
 message OperationStatus {
   // HTTP status code
   uint64 status = 1;
 }
 
 // remote peer NETCONF session parameters
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols/NodeNETCONFProtocol
 message NodeNETCONFProtocolSessionParameters {
   // session keepalive time, in seconds
   uint64 keepalive = 1;
 }
 
 // Management Protocol information schema
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols/$ref
 message MgmtProtocols {
   // operating system Version
   string operatingSystemVersion = 1;
@@ -858,15 +736,11 @@ message MgmtProtocols {
 }
 
 // Failure simulation parameters.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/$ref/NodeDesignParameters
 message NodeFailureSimulation {
   bool canFail = 1;
 }
 
 // Extends the operational status to planned elements like nodes and links
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/$ref
 enum OperStatusAndPlanned {
   OPERSTATUSANDPLANNED_DOWN = 0;
   OPERSTATUSANDPLANNED_UNKNOWN = 1;
@@ -876,8 +750,6 @@ enum OperStatusAndPlanned {
 }
 
 // NETCONF provisioning protocol session state.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols/NodeNETCONFProtocol
 enum NETCONFOperationState {
   NETCONFOPERATIONSTATE_SESSION_CLOSE = 0;
   NETCONFOPERATIONSTATE_CONNECTING = 1;
@@ -902,8 +774,6 @@ enum NETCONFOperationState {
 // progress"->"cancelled" [label = "Cancel maintenance" ];"cancelled"->"planned" 
 // [label = "Modify maintenance" ]; "cancelled"->"deleted" [label = "Delete 
 // maintenance" ];}
-// used by topology
-// defined from topology/rpc/input/AddMaintenance/$ref/Maintenance/$ref
 enum MaintenanceStatus {
   MAINTENANCESTATUS_CANCELLED = 0;
   MAINTENANCESTATUS_DELETED = 1;
@@ -912,8 +782,6 @@ enum MaintenanceStatus {
 }
 
 // BGP Node properties
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols
 message NodeBGPProtocol {
   // default AS
   ASNumber AutonomousSystem = 1;
@@ -921,8 +789,6 @@ message NodeBGPProtocol {
 }
 
 // Interface administrative status
-// used by topology-lsp, topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref
 enum AdminStatus {
   ADMINSTATUS_DOWN = 0;
   ADMINSTATUS_UNKNOWN = 1;
@@ -932,8 +798,6 @@ enum AdminStatus {
 
 // schema for bulk NODE creation, the number of entries that can be modified at a 
 // time is limited
-// used by topology
-// defined from topology/rpc/input/BulkAddNode/$ref
 message CreateNodeList {
   // schema for bulk NODE creation, the number of entries that can be modified at 
   // a time is limited
@@ -941,8 +805,6 @@ message CreateNodeList {
 }
 
 // IP Prefix
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/$ref/NodePrefixList/$ref/NodePrefix/$ref
 message Ipv4Prefix {
   // prefix length
   int64  length  = 1;
@@ -952,15 +814,11 @@ message Ipv4Prefix {
 }
 
 // SR properties
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/InterfaceProtocols
 message SRLinkProperties {
   repeated AdjacencySegmentIdentifiers SIDs = 1;
 }
 
 // set of parameters accepted when creating, using POST, a planned link
-// used by topology
-// defined from topology/rpc/input/AddLink/$ref
 message CreateLink {
   // link type
   string    linkType = 1;
@@ -977,16 +835,12 @@ message CreateLink {
 }
 
 // List of SIDs
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/InterfaceProtocols/SRLinkProperties/$ref
 message SIDList {
   // List of SIDs
   repeated AdjacencySegmentIdentifiers entry = 1;
 }
 
 // OSPF Node properties
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols
 message NodeOSPFProtocol {
   // format: ipv4
   string routerId    = 1;
@@ -1002,8 +856,6 @@ message NodeOSPFProtocol {
 // This is a number or string representing a given risk. For instance two link 
 // sharing the same duct should have one SRLG/Facility representing that shared 
 // risk (the duct).
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/SrlgList/$ref
 message Srlg {
   string srlgName  = 1;
   uint64 srlgValue = 2;
@@ -1011,8 +863,6 @@ message Srlg {
 
 // properties set that can used to update a planned Node--other properties can be 
 // set, but they will be ignored.
-// used by topology
-// defined from topology/rpc/input/UpdateNode/$ref
 message UpdateNode {
   // Comment
   string                     comment          = 1 ;
@@ -1046,8 +896,6 @@ message UpdateNode {
 }
 
 // Input parameters for GetLinkHistory, GetLspHistory rpcs
-// used by topology
-// defined from topology/rpc/input/GetLinkHistory
 message GetLinkHistoryQuery {
   // TE App object index
   uint64 objectIndex = 1;
@@ -1056,8 +904,6 @@ message GetLinkHistoryQuery {
 }
 
 // protocols configuration and information on the node
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node
 message NodeProtocols {
   // Node PCEP Session properties and status.
   NodePCEPProtocol    PCEP       = 1;
@@ -1075,16 +921,12 @@ message NodeProtocols {
 }
 
 // MPLS local protection
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface
 enum MPLSlocalProtection {
   MPLSLOCALPROTECTION_LINK = 0;
   MPLSLOCALPROTECTION_NODELINK = 1;
 }
 
 // User defined design properties
-// used by topology-lsp, topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface
 message DesignParameters {
   // Indicate if the link can fail or not. This parameter is evaluated when 
   // routing LSP with useProtectedLinks set to Protected.
@@ -1105,8 +947,6 @@ message DesignParameters {
 }
 
 // Bandwidth value in from 0 - 10,000,000,000[bBKkMmGg]
-// used by topology-lsp, topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/UnreservedBw/$ref
 message Bandwidth {
   oneof oneOf_1 {
     string strValue = 1;
@@ -1115,8 +955,6 @@ message Bandwidth {
 }
 
 // represents the remote peer advertised capabilites
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols/NodePCEPProtocol
 message NodePCEPProtocolCapabilities {
   // Stateful PCE P2MP LSP Update
   bool p2mpUpdate        = 1;
@@ -1133,8 +971,6 @@ message NodePCEPProtocolCapabilities {
 }
 
 // Type of risk associated with this facility.
-// used by topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/FacilityList/$ref/Facility//$ref/FacilityElement
 enum FacilityElementType {
   FACILITYELEMENTTYPE_NODE = 0;
   FACILITYELEMENTTYPE_INTERFACE = 1;

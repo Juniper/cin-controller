@@ -20,16 +20,12 @@ service TopologyLspService {
 
 
 // LSP routing policies
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspPlannedPathProperties/$ref
 message PlannedPolicies {
   // LSP delay-based metric policies
   DelayBasedMetrics delayBasedMetrics = 1;
 }
 
 // Description of an event
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspPlannedPathProperties/$ref
 message CalendarSchema {
   // optional recurence description
   SchedulingRecurence recurrence = 1;
@@ -42,8 +38,6 @@ message CalendarSchema {
 }
 
 // Input parameters for SearchLsp rpc
-// used by topology-lsp
-// defined from topology-lsp/rpc/input/SearchLsp
 message SearchLspQuery {
   // object name, string without space, comma
   string     name       = 1;
@@ -53,8 +47,6 @@ message SearchLspQuery {
 }
 
 // Node or Adjacency Identifier (NAI) type
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties/SignaledPath/SignaledEro/$ref/SREROHop/Nai/$ref/SRAdjacencyNetworkAddress
 enum NaiType {
   NAITYPE_IPV4NODENAI = 0;
   NAITYPE_IPV6ADJACENCYNAI = 1;
@@ -63,8 +55,6 @@ enum NaiType {
 }
 
 // Defines the attributes collected via deviceCollection.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref
 message LspCollectedPathProperties {
   // Comment
   string            comment                 = 1 ;
@@ -122,8 +112,6 @@ message LspCollectedPathProperties {
 }
 
 // Type of operation.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/GetLspHistory/$ref/LspHistoryEventList/$ref/LspHistoryEvent
 enum TopoActionType {
   TOPOACTIONTYPE_FAILED = 0;
   TOPOACTIONTYPE_ADD = 1;
@@ -134,8 +122,6 @@ enum TopoActionType {
 }
 
 // In case of request error, provide an error string
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/AddLsp/$ref/CreateLSPOrResponse
 message RequestError {
   // error string, either free text or defined error
   string error = 1;
@@ -143,8 +129,6 @@ message RequestError {
 
 // Read-only, Indicates if a LSP is FRR-protected or not. This is for the Protected 
 // LSP.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspCollectedPathProperties
 message FrrProtectionFlag {
   // indicate if FRR local protection is requested for the LSP.
   bool                   enabled             = 1;
@@ -152,8 +136,6 @@ message FrrProtectionFlag {
 }
 
 // An LSP RRO Hop
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties//$ref
 message RROHop {
   // for RRO Hops only, indicate if the protection is available
   bool                    protectionAvailable   = 1;
@@ -166,8 +148,6 @@ message RROHop {
 }
 
 // define the non-tunnel attributes of an TE-LSP, the one that may be modified
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref
 message LspPlannedPathProperties {
   // Comment
   string           comment                             = 1 ;
@@ -236,8 +216,6 @@ message LspPlannedPathProperties {
 // define the live-only tunnel properties, some properties are duplicated on 
 // purpose with plannedProperties, because of schema limitation 
 // (additionalProperties not expressed well with oneOf
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref
 message LspLivePathProperties {
   AdminStatus           adminStatus        = 1 ;
   repeated RROHop       rro                = 2 ;
@@ -266,8 +244,6 @@ message LspLivePathProperties {
 
 // LSP Operational status: Usual operational status and the one from dynamic 
 // signaling protocol.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties
 message LspOperationalStatus {
   oneof oneOf_1 {
     OperStatus            operStatus            = 1;
@@ -276,8 +252,6 @@ message LspOperationalStatus {
 }
 
 // Minimum LSP identification
-// used by topology-lsp
-// defined from topology-lsp/rpc/input/BulkDeleteLsp/$ref/LspListDelete
 message LspReference {
   // Program ID for lsp
   // This is a REQUIRED attribute
@@ -285,16 +259,12 @@ message LspReference {
 }
 
 // Network address in SR ERO
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties/SignaledPath/SignaledEro/$ref/SREROHop/Nai/$ref
 message SRNodeNetworkAddress {
   string  address        = 1;
   NaiType topoObjectType = 2;
 }
 
 // indicate if the LSP is a real LSP or the representation of a transport path
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp
 enum LspLayer {
   LSPLAYER_IP = 0;
   LSPLAYER_TRANSPORT = 1;
@@ -303,8 +273,6 @@ enum LspLayer {
 // indicates who controls the LSP, PCC controlled LSPs are completly under PCC 
 // control, Delegated LSPs are created by the PCC and controlled by the PCE, 
 // PCEInitiated are created and controlled by the PCE.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref
 enum LspControlType {
   LSPCONTROLTYPE_PCC = 0;
   LSPCONTROLTYPE_DELEGATED = 1;
@@ -314,8 +282,6 @@ enum LspControlType {
 
 // schema for bulk LSP delete, the number of entries that can be modified at a time 
 // is limited
-// used by topology-lsp
-// defined from topology-lsp/rpc/input/BulkDeleteLsp/$ref
 message LspListDelete {
   // schema for bulk LSP delete, the number of entries that can be modified at a 
   // time is limited
@@ -323,22 +289,16 @@ message LspListDelete {
 }
 
 // message for all RPC that do not take any parameter
-// used by topology-lsp, topology-transport, topology
-// defined from _undef
 message NoParameters {
 }
 
 // a numbered reference, not correlated to any object type
-// used by topology-lsp, topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref
 message Ipv4Reference {
   // This is a REQUIRED attribute
   string address = 1;
 }
 
 // path role
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref
 enum LspPathType {
   LSPPATHTYPE_STANDBY = 0;
   LSPPATHTYPE_PRIMARY = 1;
@@ -346,8 +306,6 @@ enum LspPathType {
 }
 
 // optional recurence description
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspPlannedPathProperties/$ref/CalendarSchema
 message SchedulingRecurence {
   // Frequency, possibly one of SECONDLY MINUTELY HOURLY DAILY WEEKLY MONTHLY 
   // YEARLY, however actual support is restricted to DAILY
@@ -359,8 +317,6 @@ message SchedulingRecurence {
 }
 
 // a numbered reference, not correlated to any object type
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties/SignaledPath/SignaledEro/$ref/EROHop/$ref
 message HopWithId {
   // object id
   // This is a REQUIRED attribute
@@ -372,8 +328,6 @@ message HopWithId {
 
 // On LSP request success, contains the modified LSP. On LSP request error, 
 // contains the error information.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/AddLsp/$ref
 message CreateLSPOrResponse {
   oneof oneOf_1 {
     Lsp          lsp   = 1;
@@ -383,8 +337,6 @@ message CreateLSPOrResponse {
 }
 
 // An Segment Routing (SR) Hop
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties/SignaledPath/SignaledEro/$ref
 message SREROHop {
   // the adjacency SID
   uint64     sid            = 1;
@@ -397,8 +349,6 @@ message SREROHop {
 }
 
 // LSP color, as per draft-filsfils-spring-segment-routing-policy
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties/$ref
 message LspColor {
   oneof oneOf_1 {
     string stringValue = 1;
@@ -407,8 +357,6 @@ message LspColor {
 }
 
 // define a te-lsp of a tunnel
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref
 message Lsp {
   // node configured P2MP name
   string                     p2mpName                    = 1 ;
@@ -456,8 +404,6 @@ message Lsp {
 }
 
 // Operational status
-// used by topology-lsp, topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/Node/NodeProtocols/NodePCEPProtocol/$ref
 enum OperStatus {
   OPERSTATUS_DOWN = 0;
   OPERSTATUS_UNKNOWN = 1;
@@ -466,16 +412,12 @@ enum OperStatus {
 }
 
 // List of LspHistoryEvents.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/GetLspHistory/$ref
 message LspHistoryEventList {
   // List of LspHistoryEvents.
   repeated LspHistoryEvent entry = 1;
 }
 
 // Network address in SR ERO
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties/SignaledPath/SignaledEro/$ref/SREROHop/Nai/$ref
 message SRAdjacencyNetworkAddress {
   string  remoteAddress  = 1;
   string  localAddress   = 2;
@@ -484,8 +426,6 @@ message SRAdjacencyNetworkAddress {
 }
 
 // LSP delay-based metric policies
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspPlannedPathProperties/$ref/PlannedPolicies
 message DelayBasedMetrics {
   // High delay Threshold: when the calculated delay is greater than the 
   // threshold, the LSP is configured using the highDelayMetric
@@ -504,8 +444,6 @@ message DelayBasedMetrics {
 }
 
 // Indicate the type of TE Path
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref
 enum LspProvisioningType {
   LSPPROVISIONINGTYPE_SR = 0;
   LSPPROVISIONINGTYPE_RSVP = 1;
@@ -513,8 +451,6 @@ enum LspProvisioningType {
 
 // current controller status for the LSP. In the context of collected Properties 
 // this reflects the NETCONF status of the controller
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspPlannedPathProperties
 message ControllerStatus {
   // String representing the Path Computation Server status
   string status  = 1;
@@ -525,16 +461,12 @@ message ControllerStatus {
 }
 
 // Generic RPC operation result when no data is returned
-// used by topology-lsp, topology-transport, topology
-// defined from _undef
 message OperationStatus {
   // HTTP status code
   uint64 status = 1;
 }
 
 // define a te-lsp of a tunnel
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref
 message CreateLsp {
   // node configured P2MP name
   string                     p2mpName                    = 1 ;
@@ -583,23 +515,17 @@ message CreateLsp {
 
 // Frequency, possibly one of SECONDLY MINUTELY HOURLY DAILY WEEKLY MONTHLY YEARLY, 
 // however actual support is restricted to DAILY
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspPlannedPathProperties/$ref/CalendarSchema/SchedulingRecurence
 enum RecurenceFrequency {
   RECURENCEFREQUENCY_DAILY = 0;
 }
 
 // Signaled LSP Path.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties
 message SignaledPath {
   // Signaled LSP Path.
   repeated SignaledEro entry = 1;
 }
 
 // Signaled LSP Hop.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties/SignaledPath
 message SignaledEro {
   oneof oneOf_1 {
     EROHop   EROHop   = 1;
@@ -611,8 +537,6 @@ message SignaledEro {
 // the real destination is in to (For instance ASBR in next AS), while the PCC 
 // should see the ASBR in the same AS for BGP route resolution. This is the result 
 // of the  plannedProperties/usePenultimateHopAsSignalingAddress.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp
 message ToSignalingAddress {
   oneof oneOf_1 {
     Ipv4Reference ipv4Reference = 1;
@@ -620,8 +544,6 @@ message ToSignalingAddress {
 }
 
 // Node or Adjacency Identifier (NAI)
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties/SignaledPath/SignaledEro/$ref/SREROHop
 message Nai {
   oneof oneOf_1 {
     SRAdjacencyNetworkAddress SRAdjacencyNetworkAddress = 1;
@@ -630,24 +552,18 @@ message Nai {
 }
 
 // Current controller (entity deciding of the LSP path) of an LSP.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref
 enum LspController {
   LSPCONTROLLER_NORTHSTAR = 0;
   LSPCONTROLLER_EXTERNAL = 1;
 }
 
 // Read-only, Indicates if a LSP a bypass. This is for the Protecting LSP.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspCollectedPathProperties
 message FrrProtectingFlag {
   FrrLocalProtectionType localProtectionType = 1;
 }
 
 // schema for bulk LSP creation, the number of entries that can be modified at a 
 // time is limited
-// used by topology-lsp
-// defined from topology-lsp/rpc/input/BulkAddLsp/$ref
 message CreateLSPList {
   // schema for bulk LSP creation, the number of entries that can be modified at 
   // a time is limited
@@ -655,8 +571,6 @@ message CreateLSPList {
 }
 
 // the object carries a set of optional properties
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties
 message SignalingExtensions {
   // Read-only parameter, indicates if auto-bandwidth is activated on the LSP. 
   // Valid only on Juniper Routers. When set the bandwidth is controlled by the 
@@ -668,8 +582,6 @@ message SignalingExtensions {
 }
 
 // Interface administrative status
-// used by topology-lsp, topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref
 enum AdminStatus {
   ADMINSTATUS_DOWN = 0;
   ADMINSTATUS_UNKNOWN = 1;
@@ -679,8 +591,6 @@ enum AdminStatus {
 
 // tunnel source address, should reference an interface or a node, same for all 
 // TE-LSP of a tunnel
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp
 message LspEndpoint {
   oneof oneOf_1 {
     Ipv4Reference ipv4Reference = 1;
@@ -689,8 +599,6 @@ message LspEndpoint {
 
 // The type of local protection requested. NHOP Bypass is link-level protection, 
 // NNHOP is link-node-level protection (Please refer to RFC4090#section-2).
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspCollectedPathProperties/FrrProtectionFlag/$ref
 enum FrrLocalProtectionType {
   FRRLOCALPROTECTIONTYPE_DETOUR = 0;
   FRRLOCALPROTECTIONTYPE_NHOP_BYPASS = 1;
@@ -698,16 +606,12 @@ enum FrrLocalProtectionType {
 }
 
 // List of LSPs.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref
 message LspList {
   // List of LSPs.
   repeated Lsp entry = 1;
 }
 
 // a unnumbered reference, not correlated to any object type
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties//$ref/RROHop/$ref
 message UnnumberedIfReference {
   // This is a REQUIRED attribute
   string node      = 1;
@@ -720,8 +624,6 @@ message UnnumberedIfReference {
 }
 
 // entry in the history of an LSP, which consists of the actions made by NorthStar
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/GetLspHistory/$ref/LspHistoryEventList/$ref
 message LspHistoryEvent {
   // A description of the event
   string                   eventStatusString = 1;
@@ -740,16 +642,12 @@ message LspHistoryEvent {
 }
 
 // This is the SouthBound protocol/interface used by NorthStar to create the LSP.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref
 enum LspConfigurationProtocol {
   LSPCONFIGURATIONPROTOCOL_PCEP = 0;
   LSPCONFIGURATIONPROTOCOL_NETCONF = 1;
 }
 
 // Lsp additional operation status
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties/LspOperationalStatus/$ref
 enum LspExtendedOperStatus {
   LSPEXTENDEDOPERSTATUS_ACTIVE = 0;
   LSPEXTENDEDOPERSTATUS_GOINGUP = 1;
@@ -757,8 +655,6 @@ enum LspExtendedOperStatus {
 }
 
 // User defined design properties
-// used by topology-lsp, topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface
 message DesignParameters {
   // Indicate if the link can fail or not. This parameter is evaluated when 
   // routing LSP with useProtectedLinks set to Protected.
@@ -779,8 +675,6 @@ message DesignParameters {
 }
 
 // SR ERO Hop Type. Hop ID will be used in case a bindingSID LSP is used.
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties/SignaledPath/SignaledEro/$ref/EROHop/$ref/HopWithId
 enum EroHopType {
   EROHOPTYPE_SID = 0;
   EROHOPTYPE_ADJACENCYSID = 1;
@@ -789,8 +683,6 @@ enum EroHopType {
 }
 
 // Bandwidth value in from 0 - 10,000,000,000[bBKkMmGg]
-// used by topology-lsp, topology
-// defined from topology/rpc/output/GetTopology/$ref/Topology/$ref/LinkList/$ref/Link/Interface/$ref/Interface/$ref/UnreservedBw/$ref
 message Bandwidth {
   oneof oneOf_1 {
     string strValue = 1;
@@ -799,16 +691,12 @@ message Bandwidth {
 }
 
 // Indicates if a tunnel is FRR-protected or not
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties
 message FrrLiveProtectionFlag {
   // indicate if local protection is requested for the LSP.
   bool enabled = 1;
 }
 
 // an LSP ERO Hop, not correlated
-// used by topology-lsp
-// defined from topology-lsp/rpc/output/SearchLsp/$ref/LspList/$ref/Lsp/$ref/LspLivePathProperties/SignaledPath/SignaledEro/$ref
 message EROHop {
   // indicates if the Hop is a loose Hop
   bool                    loose                 = 1;
