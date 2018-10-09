@@ -8,13 +8,13 @@ service TopologyLspService {
 
   //  RPC for lsp
   rpc SearchLsp(SearchLspQuery) returns (LspList) {};
-  rpc GetLsp(GetNodeQuery) returns (Lsp) {};
-  rpc BulkDeleteLsp(LspListDelete) returns (OperationStatus) {};
+  rpc DeleteLSPs(LspListDelete) returns (OperationStatus) {};
   rpc ListLsps(NoParameters) returns (LspList) {};
-  rpc AddLsp(Lsp) returns (CreateLSPOrResponse) {};
-  rpc BulkAddLsp(CreateLSPList) returns (LspList) {};
-  rpc DeleteLsp(GetNodeQuery) returns (OperationStatus) {};
-  rpc GetLspHistory(GetLinkHistoryQuery) returns (LspHistoryEventList) {};
+
+  //  RPC for lspMesh
+  rpc AddLspMesh(LspMesh) returns (LspMesh) {};
+  rpc UpdateLspMesh(LspMesh) returns (LspMesh) {};
+  rpc DeleteLspMesh(LspMesh) returns (OperationStatus) {};
 }
 
 
@@ -23,18 +23,6 @@ service TopologyLspService {
 message PlannedPolicies {
   // LSP delay-based metric policies
   DelayBasedMetrics delayBasedMetrics = 1;
-}
-
-// Description of an event
-message CalendarSchema {
-  // optional recurence description
-  SchedulingRecurence recurrence = 1;
-  // end time
-  // This is a REQUIRED attribute
-  string              endTime    = 2;
-  // start time
-  // This is a REQUIRED attribute
-  string              startTime  = 3;
 }
 
 // Input parameters for SearchLsp rpc
@@ -54,87 +42,6 @@ enum NaiType {
   NAITYPE_IPV4ADJACENCYNAI = 3;
 }
 
-// Defines the attributes collected via deviceCollection.
-message LspCollectedPathProperties {
-  // Comment
-  string            comment                 = 1 ;
-  AdminStatus       adminStatus             = 2 ;
-  LspColor          color                   = 3 ;
-  string            lastStatusString        = 4 ;
-  // resulting IGP metric of the tunnel
-  uint64            metric                  = 5 ;
-  // Explicit path name
-  string            explicitPathName        = 6 ;
-  Bandwidth         bandwidth               = 7 ;
-  // Binding SID assigned to the LSP
-  uint64            bindingSID              = 8 ;
-  DesignParameters  design                  = 9 ;
-  // Exclusions as ERO HOP list. The loose flag not considered.
-  repeated EROHop   xro                     = 10;
-  // Read-only, Indicates if a LSP is FRR-protected or not. This is for the 
-  // Protected LSP.
-  FrrProtectionFlag frrLocalProtection      = 11;
-  // current controller status for the LSP. In the context of collected 
-  // Properties this reflects the NETCONF status of the controller
-  ControllerStatus  controllerStatus        = 12;
-  // Describe when the collection took place
-  uint64            timestamp               = 13;
-  // Operational Path, please note that its reported as an ERO hop list from 
-  // parser.
-  repeated EROHop   rro                     = 14;
-  // parameter indicates the order (lowest first) in which secondary/standby 
-  // te-lsps path are tried in case of active LSP failure, active LSPs before 
-  // down LSPs
-  uint64            preference              = 15;
-  // Desired exclusions path, as ERO HOP list. The loose flag not considered. 
-  // --if not feasible NorthStar will calculate another path
-  repeated EROHop   preferredXro            = 16;
-  // Read-only, Indicates if a LSP a bypass. This is for the Protecting LSP.
-  FrrProtectingFlag frrProtectingAttributes = 17;
-  // desired explicit path
-  repeated EROHop   preferredEro            = 18;
-  // Setup priority
-  uint64            setupPriority           = 19;
-  // Hop count derived from RRO correlated to topology information. If the RRO 
-  // contains a mix of node and link IP address, NorthStar is using its 
-  // correlation to provide this number. This attribute is ignored on PUT or POST 
-  // requests. Not valid on POST/PUT.
-  uint64            correlatedRROHopCount   = 20;
-  // the path calculated by NorthStar, it does not include node ids
-  repeated EROHop   calculatedEro           = 21;
-  // Holding priority
-  uint64            holdingPriority         = 22;
-  // required explicit path
-  repeated EROHop   ero                     = 23;
-  // routing operational status, when Down it means that no route has been found. 
-  // Not valid on POST/PUT
-  OperStatus        routingStatus           = 24;
-}
-
-// Type of operation.
-enum TopoActionType {
-  TOPOACTIONTYPE_FAILED = 0;
-  TOPOACTIONTYPE_ADD = 1;
-  TOPOACTIONTYPE_STATE_CHANGE = 2;
-  TOPOACTIONTYPE_QUERY = 3;
-  TOPOACTIONTYPE_UPDATE = 4;
-  TOPOACTIONTYPE_REMOVE = 5;
-}
-
-// In case of request error, provide an error string
-message RequestError {
-  // error string, either free text or defined error
-  string error = 1;
-}
-
-// Read-only, Indicates if a LSP is FRR-protected or not. This is for the Protected 
-// LSP.
-message FrrProtectionFlag {
-  // indicate if FRR local protection is requested for the LSP.
-  bool                   enabled             = 1;
-  FrrLocalProtectionType localProtectionType = 2;
-}
-
 // An LSP RRO Hop
 message RROHop {
   // for RRO Hops only, indicate if the protection is available
@@ -149,68 +56,12 @@ message RROHop {
 
 // define the non-tunnel attributes of an TE-LSP, the one that may be modified
 message LspPlannedPathProperties {
-  // Comment
-  string           comment                             = 1 ;
-  AdminStatus      adminStatus                         = 2 ;
-  LspColor         color                               = 3 ;
-  string           lastStatusString                    = 4 ;
-  // resulting IGP metric of the tunnel
-  uint64           metric                              = 5 ;
-  Bandwidth        bandwidth                           = 6 ;
-  // Binding SID assigned to the LSP
-  uint64           bindingSID                          = 7 ;
-  DesignParameters design                              = 8 ;
-  // Exclusions as ERO HOP list. The loose flag not considered.
-  repeated EROHop  xro                                 = 9 ;
-  // current controller status for the LSP. In the context of collected 
-  // Properties this reflects the NETCONF status of the controller
-  ControllerStatus controllerStatus                    = 10;
-  // Valid for SR LSP only. If set, the penultimate hop will be used as the 
-  // destination of the tunnel, as seen by the PCC, while the Traffic engineering 
-  // destination is the to. For instance in EPE TE engineering the real 
-  // destination is in to (For instance ASBR in next AS), while the PCC should 
-  // see the ASBR in the same AS for BGP route resolution. The address used by 
-  // default is the te-router id of the penultimate hop. If a routing constraint 
-  // (ero) does match that penultimate hop, the address specified in the routing 
-  // contraint will be used.
-  bool             usePenultimateHopAsSignalingAddress = 11;
-  PlannedPolicies  policy                              = 12;
-  // For SR-Tunnel there is no secondary LSP, the live status of the tunnel is 
-  // mapped into the primary LSP definition. In order to evaluate correctly which 
-  // path is currently in use this attibute indicate the pathName of the 
-  // secondary LSP used. This attribute is not present for RSVP-LSPs. This 
-  // attribute is not present if the primary definition is used. Not valid on 
-  // POST/PUT
-  string           pathDefinitionUsed                  = 13;
-  CalendarSchema   bandwidthCalendar                   = 14;
-  // Optional path name, fixed once LSP created
-  string           pathName                            = 15;
-  // parameter indicates the order (lowest first) in which secondary/standby 
-  // te-lsps path are tried in case of active LSP failure, active LSPs before 
-  // down LSPs
-  uint64           preference                          = 16;
-  // Desired exclusions path, as ERO HOP list. The loose flag not considered. 
-  // --if not feasible NorthStar will calculate another path
-  repeated EROHop  preferredXro                        = 17;
-  // desired explicit path--if not feasible NorthStar will calculate another path
-  repeated EROHop  preferredEro                        = 18;
-  // Setup priority
-  uint64           setupPriority                       = 19;
-  // Hop count derived from RRO correlated to topology information. If the RRO 
-  // contains a mix of node and link IP address, NorthStar is using its 
-  // correlation to provide this number. This attribute is ignored on PUT or POST 
-  // requests. Not valid on POST/PUT.
-  uint64           correlatedRROHopCount               = 20;
-  // path calculated by NorthStar, it does not include node ids. Not valid on 
-  // POST/PUT
-  repeated EROHop  calculatedEro                       = 21;
-  // Holding priority
-  uint64           holdingPriority                     = 22;
-  // required explicit path
-  repeated EROHop  ero                                 = 23;
+  Bandwidth        bandwidth     = 1;
+  DesignParameters design        = 2;
+  PlannedPolicies  policy        = 3;
   // routing operational status, when Down it means that no route has been found. 
   // Not valid on POST/PUT
-  OperStatus       routingStatus                       = 24;
+  OperStatus       routingStatus = 4;
 }
 
 // define the live-only tunnel properties, some properties are duplicated on 
@@ -264,27 +115,9 @@ message SRNodeNetworkAddress {
   NaiType topoObjectType = 2;
 }
 
-// indicate if the LSP is a real LSP or the representation of a transport path
-enum LspLayer {
-  LSPLAYER_IP = 0;
-  LSPLAYER_TRANSPORT = 1;
-}
-
-// indicates who controls the LSP, PCC controlled LSPs are completly under PCC 
-// control, Delegated LSPs are created by the PCC and controlled by the PCE, 
-// PCEInitiated are created and controlled by the PCE.
-enum LspControlType {
-  LSPCONTROLTYPE_PCC = 0;
-  LSPCONTROLTYPE_DELEGATED = 1;
-  LSPCONTROLTYPE_TRANSPORT = 2;
-  LSPCONTROLTYPE_PCEINITIATED = 3;
-}
-
 // schema for bulk LSP delete, the number of entries that can be modified at a time 
 // is limited
 message LspListDelete {
-  // schema for bulk LSP delete, the number of entries that can be modified at a 
-  // time is limited
   repeated LspReference entry = 1;
 }
 
@@ -298,24 +131,6 @@ message Ipv4Reference {
   string address = 1;
 }
 
-// path role
-enum LspPathType {
-  LSPPATHTYPE_STANDBY = 0;
-  LSPPATHTYPE_PRIMARY = 1;
-  LSPPATHTYPE_SECONDARY = 2;
-}
-
-// optional recurence description
-message SchedulingRecurence {
-  // Frequency, possibly one of SECONDLY MINUTELY HOURLY DAILY WEEKLY MONTHLY 
-  // YEARLY, however actual support is restricted to DAILY
-  // This is a REQUIRED attribute
-  RecurenceFrequency FREQ     = 1;
-  // Only daily, every day recurence is supported
-  uint64             INTERVAL = 2;
-  string             UNTIL    = 3;
-}
-
 // a numbered reference, not correlated to any object type
 message HopWithId {
   // object id
@@ -324,16 +139,6 @@ message HopWithId {
   // SR ERO Hop Type. Hop ID will be used in case a bindingSID LSP is used.
   // This is a REQUIRED attribute
   EroHopType topoObjectType = 2;
-}
-
-// On LSP request success, contains the modified LSP. On LSP request error, 
-// contains the error information.
-message CreateLSPOrResponse {
-  oneof oneOf_1 {
-    Lsp          lsp   = 1;
-    // In case of request error, provide an error string
-    RequestError error = 2;
-  }
 }
 
 // An Segment Routing (SR) Hop
@@ -358,49 +163,24 @@ message LspColor {
 
 // define a te-lsp of a tunnel
 message Lsp {
-  // node configured P2MP name
-  string                     p2mpName                    = 1 ;
-  // Read-Only. Destination of the tunnel, as seen by the PCC, for EPE TE 
-  // engineering the real destination is in to (For instance ASBR in next AS), 
-  // while the PCC should see the ASBR in the same AS for BGP route resolution. 
-  // This is the result of the  
-  // plannedProperties/usePenultimateHopAsSignalingAddress.
-  ToSignalingAddress         toSignalingAddress          = 2 ;
-  // indicate if the LSP is a real LSP or the representation of a transport path
-  LspLayer                   layer                       = 3 ;
-  // state of the path in the PCC, which is read-only
-  LspLivePathProperties      liveProperties              = 4 ;
-  // tunnel source address, should reference an interface or a node, same for all 
-  // TE-LSP of a tunnel
-  LspEndpoint                from                        = 5 ;
-  // tunnel name, several TE-LSP may have the same name, they are part of the 
-  // same tunnel
-  string                     name                        = 6 ;
-  // signaling protocol p2mp tunnel id, may be empty, same for all TE-LSP of a 
-  // p2mp tree
-  uint64                     p2mpIndex                   = 7 ;
-  LspConfigurationProtocol   creationConfigurationMethod = 8 ;
-  string                     initiator                   = 9 ;
-  LspPathType                pathType                    = 10;
-  // planned path state, this attribute is read-write, can be modified in an 
-  // update
-  LspPlannedPathProperties   plannedProperties           = 11;
-  // tunnel destination, should reference an interface or a node, same for all 
-  // TE-LSP of a tunnel
-  LspEndpoint                to                          = 12;
-  LspController              controller                  = 13;
-  LspOperationalStatus       operationalStatus           = 14;
-  LspControlType             controlType                 = 15;
-  // signaling protocol tunnel id, can be left empty, same for all TE-LSP of a 
-  // tunnel
-  uint64                     tunnelId                    = 16;
-  LspProvisioningType        provisioningType            = 17;
-  // Path State (config and operationalState) from device Collection. Read-only 
-  // and ignored on PUT/POST
-  LspCollectedPathProperties collectedProperties         = 18;
   // Program ID for lsp
   // This is a REQUIRED attribute
-  uint64                     lspIndex                    = 19;
+  uint64                   lspIndex          = 1;
+  // tunnel source address, should reference an interface or a node, same for all 
+  // TE-LSP of a tunnel
+  LspEndpoint              from              = 2;
+  // tunnel name, several TE-LSP may have the same name, they are part of the 
+  // same tunnel
+  string                   name              = 3;
+  // tunnel destination, should reference an interface or a node, same for all 
+  // TE-LSP of a tunnel
+  LspEndpoint              to                = 4;
+  // planned path state, this attribute is read-write, can be modified in an 
+  // update
+  LspPlannedPathProperties plannedProperties = 5;
+  // state of the path in the PCC, which is read-only
+  LspLivePathProperties    liveProperties    = 6;
+  LspOperationalStatus     operationalStatus = 7;
 }
 
 // Operational status
@@ -409,12 +189,6 @@ enum OperStatus {
   OPERSTATUS_UNKNOWN = 1;
   OPERSTATUS_UP = 2;
   OPERSTATUS_EMPTY = 3;
-}
-
-// List of LspHistoryEvents.
-message LspHistoryEventList {
-  // List of LspHistoryEvents.
-  repeated LspHistoryEvent entry = 1;
 }
 
 // Network address in SR ERO
@@ -443,85 +217,44 @@ message DelayBasedMetrics {
   uint64 lowDelayMetric     = 4;
 }
 
-// Indicate the type of TE Path
-enum LspProvisioningType {
-  LSPPROVISIONINGTYPE_SR = 0;
-  LSPPROVISIONINGTYPE_RSVP = 1;
-}
-
-// current controller status for the LSP. In the context of collected Properties 
-// this reflects the NETCONF status of the controller
-message ControllerStatus {
-  // String representing the Path Computation Server status
-  string status  = 1;
-  // Optional indication of which event triggered the current status
-  string trigger = 2;
-  // Indication when the next action will be done
-  string time    = 3;
-}
-
 // Generic RPC operation result when no data is returned
 message OperationStatus {
   // HTTP status code
   uint64 status = 1;
 }
 
-// define a te-lsp of a tunnel
-message CreateLsp {
-  // node configured P2MP name
-  string                     p2mpName                    = 1 ;
-  // Read-Only. Destination of the tunnel, as seen by the PCC, for EPE TE 
-  // engineering the real destination is in to (For instance ASBR in next AS), 
-  // while the PCC should see the ASBR in the same AS for BGP route resolution. 
-  // This is the result of the  
-  // plannedProperties/usePenultimateHopAsSignalingAddress.
-  ToSignalingAddress         toSignalingAddress          = 2 ;
-  // indicate if the LSP is a real LSP or the representation of a transport path
-  LspLayer                   layer                       = 3 ;
-  // state of the path in the PCC, which is read-only
-  LspLivePathProperties      liveProperties              = 4 ;
-  // tunnel source address, should reference an interface or a node, same for all 
-  // TE-LSP of a tunnel
-  LspEndpoint                from                        = 5 ;
-  // tunnel name, several TE-LSP may have the same name, they are part of the 
-  // same tunnel
-  string                     name                        = 6 ;
-  // signaling protocol p2mp tunnel id, may be empty, same for all TE-LSP of a 
-  // p2mp tree
-  uint64                     p2mpIndex                   = 7 ;
-  LspConfigurationProtocol   creationConfigurationMethod = 8 ;
-  string                     initiator                   = 9 ;
-  LspPathType                pathType                    = 10;
-  // planned path state, this attribute is read-write, can be modified in an 
-  // update
-  LspPlannedPathProperties   plannedProperties           = 11;
-  // tunnel destination, should reference an interface or a node, same for all 
-  // TE-LSP of a tunnel
-  LspEndpoint                to                          = 12;
-  LspController              controller                  = 13;
-  LspOperationalStatus       operationalStatus           = 14;
-  LspControlType             controlType                 = 15;
-  // signaling protocol tunnel id, can be left empty, same for all TE-LSP of a 
-  // tunnel
-  uint64                     tunnelId                    = 16;
-  LspProvisioningType        provisioningType            = 17;
-  // Path State (config and operationalState) from device Collection. Read-only 
-  // and ignored on PUT/POST
-  LspCollectedPathProperties collectedProperties         = 18;
-  // Program ID for lsp
-  // This is a REQUIRED attribute
-  uint64                     lspIndex                    = 19;
+// Endoint by ip or hostname
+message MeshEndpoint {
+  oneof oneOf_1 {
+    Ipv4Reference routerId = 1;
+    // ISIS hostname
+    string        hostname = 2;
+  }
 }
 
-// Frequency, possibly one of SECONDLY MINUTELY HOURLY DAILY WEEKLY MONTHLY YEARLY, 
-// however actual support is restricted to DAILY
-enum RecurenceFrequency {
-  RECURENCEFREQUENCY_DAILY = 0;
+// A mesh of LSPs from a set of endoint to a set of endpooints
+message LspMesh {
+  // Path contraints
+  LspPlannedPathProperties plannedProperties = 1;
+  // List of tunnel destinations
+  // This is a REQUIRED attribute
+  repeated MeshEndpoint    to                = 2;
+  // List of tunnel sources
+  // This is a REQUIRED attribute
+  repeated MeshEndpoint    from              = 3;
+  // Mesh name, the LSP name will be based on it
+  // This is a REQUIRED attribute
+  string                   name              = 4;
+  repeated Lsp             lsps              = 5;
+}
+
+// FIXME b
+message EndpointList {
+  repeated MeshEndpoint entry = 1;
 }
 
 // Signaled LSP Path.
 message SignaledPath {
-  // Signaled LSP Path.
   repeated SignaledEro entry = 1;
 }
 
@@ -533,41 +266,12 @@ message SignaledEro {
   }
 }
 
-// Read-Only. Destination of the tunnel, as seen by the PCC, for EPE TE engineering 
-// the real destination is in to (For instance ASBR in next AS), while the PCC 
-// should see the ASBR in the same AS for BGP route resolution. This is the result 
-// of the  plannedProperties/usePenultimateHopAsSignalingAddress.
-message ToSignalingAddress {
-  oneof oneOf_1 {
-    Ipv4Reference ipv4Reference = 1;
-  }
-}
-
 // Node or Adjacency Identifier (NAI)
 message Nai {
   oneof oneOf_1 {
     SRAdjacencyNetworkAddress SRAdjacencyNetworkAddress = 1;
     SRNodeNetworkAddress      SRNodeNetworkAddress      = 2;
   }
-}
-
-// Current controller (entity deciding of the LSP path) of an LSP.
-enum LspController {
-  LSPCONTROLLER_NORTHSTAR = 0;
-  LSPCONTROLLER_EXTERNAL = 1;
-}
-
-// Read-only, Indicates if a LSP a bypass. This is for the Protecting LSP.
-message FrrProtectingFlag {
-  FrrLocalProtectionType localProtectionType = 1;
-}
-
-// schema for bulk LSP creation, the number of entries that can be modified at a 
-// time is limited
-message CreateLSPList {
-  // schema for bulk LSP creation, the number of entries that can be modified at 
-  // a time is limited
-  repeated Lsp entry = 1;
 }
 
 // the object carries a set of optional properties
@@ -597,17 +301,8 @@ message LspEndpoint {
   }
 }
 
-// The type of local protection requested. NHOP Bypass is link-level protection, 
-// NNHOP is link-node-level protection (Please refer to RFC4090#section-2).
-enum FrrLocalProtectionType {
-  FRRLOCALPROTECTIONTYPE_DETOUR = 0;
-  FRRLOCALPROTECTIONTYPE_NHOP_BYPASS = 1;
-  FRRLOCALPROTECTIONTYPE_NNHOP_BYPASS = 2;
-}
-
 // List of LSPs.
 message LspList {
-  // List of LSPs.
   repeated Lsp entry = 1;
 }
 
@@ -621,30 +316,6 @@ message UnnumberedIfReference {
   string address   = 3;
   // Optional attribute, refer to the link index
   uint64 linkIndex = 4;
-}
-
-// entry in the history of an LSP, which consists of the actions made by NorthStar
-message LspHistoryEvent {
-  // A description of the event
-  string                   eventStatusString = 1;
-  string                   initiator         = 2;
-  // Event Timestamp.
-  uint64                   timestamp         = 3;
-  LspPathType              pathType          = 4;
-  // planned path state, this attribute is read-write, those attributes can be 
-  // modified in an update
-  LspPlannedPathProperties plannedProperties = 5;
-  LspController            controller        = 6;
-  LspControlType           controlType       = 7;
-  // Type of operation.
-  TopoActionType           operation         = 8;
-  LspProvisioningType      provisioningType  = 9;
-}
-
-// This is the SouthBound protocol/interface used by NorthStar to create the LSP.
-enum LspConfigurationProtocol {
-  LSPCONFIGURATIONPROTOCOL_PCEP = 0;
-  LSPCONFIGURATIONPROTOCOL_NETCONF = 1;
 }
 
 // Lsp additional operation status
