@@ -1,0 +1,109 @@
+
+syntax = "proto3";
+
+package Telemetry;
+
+service TelemetryService {
+    // Manage Devices
+    rpc AddDevice(AddDevRequest)            returns (AddDevResponse)    {};
+    rpc UpdateDevice(UpdDevRequest)         returns (UpdDevResponse)    {};
+    rpc DelDevice(DelDevRequest)            returns (DelDevResponse)    {};
+
+    // Manage DeviceGroups
+    rpc AddDeviceGroup(AddGrpRequest)       returns (AddGrpResponse)    {};
+    rpc DelDeviceGroup(DelGrpRequest)       returns (DelGrpResponse)    {};
+
+    // Playbooks
+    rpc GetPlayBookList(GetPBListRequest)   returns (GetPBListResponse) {};
+    rpc ApplyPlaybook(ApplyPBRequest)       returns (ApplyPBResponse)   {};
+
+    // Get results from evaluating playbook rules
+    rpc GetHealth(GetHealthRequest)         returns (GetHealthResponse) {};
+    rpc GetHealthTree(GetHealthTreeRequest) returns (GetHealthTreeResponse) {};
+    rpc GetEvent(GetEventRequest)           returns (GetEventResponse)  {};
+}
+
+// Get device health request
+message GetHealthRequest {
+    Device-ID   device  = 1;
+}
+
+enum Status {
+    OK      = 1;
+    FAIL    = 2;
+}
+
+// Get device health response
+message GetHealthResponse {
+    Device-ID   device      = 1;
+    string      timestamp   = 2;
+    Status      health      = 3;
+}
+
+// Get device health tree request
+message GetHealthTreeRequest {
+    Device-ID   device      = 1;
+    string      timestamp   = 2;
+    int64       tolerance   = 3;
+}
+
+// Get device health tree response
+message GetHealthTreeResponse {
+    string      timestamp   = 1;
+    string      health_tree = 2;
+}
+
+// Query device group events
+message GetEventRequest {
+    Device-ID   device      = 1;
+    Group-ID    group       = 2;
+    string      from_ts     = 3;
+    string      to_ts       = 4;
+}
+
+message Playbook-ID {
+    string  playbook    = 1;
+}
+
+// Apply playbook to a device group
+message ApplyPBRequest {
+    Playbook-ID playbook    = 1;
+    Group-ID    group       = 1;
+}
+
+// Get playbook list request
+message GetPBListRequest {
+    repeated Playbook-ID playbook   = 1;
+}
+
+// Add device request
+message AddDevRequest {
+    repeated Device devices = 1;
+}
+
+// Add device group request
+message AddGrpRequest {
+    Group-ID    group-id                = 1;
+    string      description             = 2;
+    repeated    Device-ID  device-ids   = 3;
+}
+
+message Device-ID {
+    string  device-id   = 1;
+}
+
+message Group-ID {
+    string  group-id    = 1;
+}
+
+// Device definition
+message Device {
+    Device-ID       device-id   = 1;
+    string          ip-address  = 2;
+    Authentication  auth        = 3;
+}
+
+message Authentication {
+    string  username    = 1;
+    string  password    = 2;
+}
